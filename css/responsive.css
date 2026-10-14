@@ -1,0 +1,186 @@
+/**
+ * responsive.css
+ * Adaptação responsiva para celular vertical, celular horizontal (landscape),
+ * tablets e computadores, com consideração de entalhe (notch) e áreas seguras.
+ */
+
+/* =========================================
+   CELULAR NA VERTICAL (PORTRAIT)
+   ========================================= */
+
+@media (max-width: 768px) and (orientation: portrait) {
+  .home-screen {
+    padding: 20px 14px 40px;
+    gap: 24px;
+  }
+
+  .hero-title {
+    font-size: 1.65rem;
+  }
+
+  .hero-subtitle {
+    font-size: 0.95rem;
+  }
+
+  .rom-drop-card {
+    padding: 28px 16px;
+  }
+
+  .btn-open-rom {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .demo-action-banner {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+  }
+
+  .recent-games-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Emulador no modo vertical */
+  .emulator-screen {
+    height: 100vh;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .emulator-topbar {
+    padding: 0 10px;
+    height: 48px;
+  }
+
+  .game-title-display {
+    max-width: 140px;
+    font-size: 0.85rem;
+  }
+
+  .emulator-viewport {
+    flex: 1;
+    padding: 4px;
+    max-height: 45vh;
+  }
+
+  .touch-controls-container {
+    flex-shrink: 0;
+  }
+}
+
+/* =========================================
+   CELULAR NA HORIZONTAL (LANDSCAPE)
+   ========================================= */
+
+@media (max-height: 540px) and (orientation: landscape) {
+  .emulator-screen {
+    height: 100vh;
+    height: 100dvh;
+    display: grid;
+    grid-template-rows: 40px 1fr;
+    grid-template-columns: 1fr;
+    overflow: hidden;
+  }
+
+  .emulator-topbar {
+    height: 40px;
+    padding: 0 calc(12px + env(safe-area-inset-right, 0px)) 0 calc(12px + env(safe-area-inset-left, 0px));
+  }
+
+  .game-title-display {
+    max-width: 200px;
+    font-size: 0.85rem;
+  }
+
+  .emulator-viewport {
+    grid-row: 2;
+    grid-column: 1;
+    width: 100%;
+    height: 100%;
+    padding: 2px;
+    z-index: 10;
+  }
+
+  .video-bezel {
+    height: 100%;
+    max-height: calc(100vh - 44px);
+  }
+
+  /* Sobrepõe os controles nas laterais livres esquerda e direita */
+  .touch-controls-container {
+    position: absolute;
+    inset: 40px 0 0 0;
+    pointer-events: none;
+    z-index: 50;
+    display: flex !important;
+    align-items: stretch;
+  }
+
+  .touch-controls-wrapper {
+    width: 100%;
+    max-width: 100%;
+    height: 100%;
+    padding: 6px calc(16px + env(safe-area-inset-right, 0px)) 8px calc(16px + env(safe-area-inset-left, 0px));
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    --touch-scale: 0.85;
+  }
+
+  .touch-shoulders-row {
+    pointer-events: auto;
+    padding: 0 4px;
+  }
+
+  .touch-main-row {
+    pointer-events: none;
+    align-items: flex-end;
+  }
+
+  .touch-dpad-container,
+  .touch-action-group,
+  .touch-system-group {
+    pointer-events: auto;
+  }
+
+  /* Reposiciona START e SELECT discretamente no centro inferior em landscape */
+  .touch-system-group {
+    margin-bottom: 2px;
+    gap: 10px;
+    --touch-scale: 0.75;
+  }
+}
+
+/* =========================================
+   COMPUTADORES E NOTEBOOKS (DESKTOP)
+   ========================================= */
+
+@media (min-width: 1025px) {
+  .emulator-viewport {
+    padding: 24px;
+  }
+
+  .video-bezel {
+    border-width: 3px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+  }
+
+  /* Seletor padrão de exibição do canvas no desktop */
+  .scale-contain {
+    max-height: 72vh;
+  }
+}
+
+/* =========================================
+   PREFERÊNCIA POR MOVIMENTO REDUZIDO
+   ========================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

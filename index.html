@@ -1,0 +1,490 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <title>AdvancePlay GBA Emulator</title>
+    <meta name="description" content="Emulador de Game Boy Advance (GBA) de alto desempenho para navegadores, com suporte a ROMs locais, controles de toque, teclado e Gamepad API." />
+    
+    <meta property="og:title" content="AdvancePlay GBA Emulator" />
+    <meta property="og:description" content="Emulador de Game Boy Advance (GBA) de alto desempenho para navegadores, com suporte a ROMs locais, controles de toque, teclado e Gamepad API." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="theme-color" content="#0a0c10" />
+
+    <!-- Estilos da Aplicação -->
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/emulator.css" />
+    <link rel="stylesheet" href="/css/controls.css" />
+    <link rel="stylesheet" href="/css/responsive.css" />
+
+    <!-- Núcleo original GBA.js por Jeffrey Pfau (endrift/gbajs) -->
+    <script src="/core/js/util.js"></script>
+    <script src="/core/js/core.js"></script>
+    <script src="/core/js/arm.js"></script>
+    <script src="/core/js/thumb.js"></script>
+    <script src="/core/js/mmu.js"></script>
+    <script src="/core/js/io.js"></script>
+    <script src="/core/js/audio.js"></script>
+    <script src="/core/js/video.js"></script>
+    <script src="/core/js/video/proxy.js"></script>
+    <script src="/core/js/video/software.js"></script>
+    <script src="/core/js/irq.js"></script>
+    <script src="/core/js/keypad.js"></script>
+    <script src="/core/js/sio.js"></script>
+    <script src="/core/js/savedata.js"></script>
+    <script src="/core/js/gpio.js"></script>
+    <script src="/core/js/gba.js"></script>
+  </head>
+  <body>
+    <div id="app">
+      <!-- =========================================
+           TELA INICIAL (A. Tela Inicial)
+           ========================================= -->
+      <main class="home-screen" id="homeScreen">
+        <!-- Topo da Home -->
+        <header class="home-header">
+          <div class="brand-group">
+            <div class="brand-icon">
+              <!-- Ícone estilizado de cartucho / GBA -->
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="6" width="20" height="12" rx="3"></rect>
+                <circle cx="6.5" cy="12" r="1.5" fill="currentColor"></circle>
+                <circle cx="17.5" cy="10.5" r="1" fill="currentColor"></circle>
+                <circle cx="15.5" cy="13.5" r="1" fill="currentColor"></circle>
+              </svg>
+            </div>
+            <div>
+              <span class="brand-title">AdvancePlay</span>
+              <span class="brand-badge">GBA</span>
+            </div>
+          </div>
+
+          <div class="home-nav-actions">
+            <button type="button" class="btn-icon-nav" id="btnHomeSettings" title="Configurações" aria-label="Abrir Configurações">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="3"></circle>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+              </svg>
+            </button>
+            <button type="button" class="btn-icon-nav" id="btnHomeAbout" title="Sobre e Créditos" aria-label="Sobre o emulador">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="16" x2="12" y2="12"></line>
+                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+              </svg>
+            </button>
+          </div>
+        </header>
+
+        <!-- Apresentação Hero -->
+        <section class="hero-section">
+          <h1 class="hero-title">Seus jogos de GBA, diretamente no navegador</h1>
+          <p class="hero-subtitle">
+            Emulação de alta fidelidade sem plugins, sem uploads para servidores e com suporte nativo a controles de toque, teclado e gamepads externos.
+          </p>
+        </section>
+
+        <!-- Card de Carregamento e DropZone -->
+        <section class="rom-drop-card" id="dropZone">
+          <input type="file" id="romFileInput" accept=".gba,.bin" style="display: none;" />
+          
+          <div class="drop-icon-wrapper">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="17 8 12 3 7 8"></polyline>
+              <line x1="12" y1="3" x2="12" y2="15"></line>
+            </svg>
+          </div>
+
+          <div>
+            <div class="drop-text-primary">Arraste e solte o arquivo da ROM aqui</div>
+            <div class="drop-text-secondary">ou selecione diretamente da memória do seu celular ou computador</div>
+          </div>
+
+          <button type="button" class="btn-open-rom" id="btnOpenRom">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"></path>
+            </svg>
+            <span>Abrir ROM</span>
+          </button>
+
+          <div class="drop-meta-hints">
+            <span>Formatos aceitos:</span>
+            <span class="game-code">.gba</span>
+            <span>·</span>
+            <span class="game-code">.bin</span>
+          </div>
+        </section>
+
+        <!-- Banner para teste rápido com ROM demonstrativa de código aberto -->
+        <section class="demo-action-banner">
+          <div class="demo-text">
+            <strong>Não tem uma ROM agora?</strong> Experimente nossa demonstração integrada para testar o vídeo e os controles imediatamente.
+          </div>
+          <button type="button" class="btn-demo-test" id="btnDemoRom">
+            Testar com Demonstração
+          </button>
+        </section>
+
+        <!-- Aviso de Privacidade e Segurança Local -->
+        <aside class="privacy-callout">
+          <div class="privacy-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+              <path d="m9 12 2 2 4-4"></path>
+            </svg>
+          </div>
+          <div>
+            <strong>100% Processamento Local e Privado:</strong> Seus arquivos de jogo nunca são enviados para servidores ou serviços externos. A emulação e o salvamento em cartucho ocorrem inteiramente dentro do seu navegador.
+          </div>
+        </aside>
+
+        <!-- Seção de Jogos Recentes (se houver histórico) -->
+        <section class="recent-games-section" id="recentGamesSection" style="display: none;">
+          <div class="section-header">
+            <h2 class="section-title">Jogos Recentes</h2>
+          </div>
+          <div class="recent-games-grid" id="recentGamesList"></div>
+        </section>
+
+        <!-- Rodapé com créditos -->
+        <footer class="home-footer">
+          <div>AdvancePlay v1.0 · Desenvolvido com HTML5, CSS3 e JavaScript</div>
+          <div>Núcleo <a href="https://github.com/endrift/gbajs" target="_blank" rel="noopener">GBA.js</a> © Jeffrey Pfau (Licença BSD-2)</div>
+        </footer>
+      </main>
+
+      <!-- =========================================
+           TELA DO EMULADOR (B. Tela do Emulador)
+           ========================================= -->
+      <section class="emulator-screen" id="emulatorScreen" style="display: none;">
+        <!-- Barra superior de controle -->
+        <header class="emulator-topbar">
+          <div class="topbar-left">
+            <button type="button" class="btn-tool" id="btnExitToHome" title="Voltar ao início" aria-label="Voltar para tela inicial">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="m15 18-6-6 6-6"></path>
+              </svg>
+            </button>
+            <div class="game-title-group">
+              <span class="game-title-display" id="gameTitleDisplay">Jogo</span>
+              <span class="game-code-badge" id="gameCodeBadge">GBA</span>
+            </div>
+          </div>
+
+          <div class="topbar-center">
+            <span class="gamepad-status-badge" id="gamepadStatusBadge">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="2" y="6" width="20" height="12" rx="2"></rect>
+                <circle cx="6.5" cy="12" r="1.5" fill="currentColor"></circle>
+                <circle cx="17.5" cy="10.5" r="1" fill="currentColor"></circle>
+                <circle cx="15.5" cy="13.5" r="1" fill="currentColor"></circle>
+              </svg>
+              <span>Controle</span>
+            </span>
+            <span class="fps-counter" id="fpsCounter" style="display: none;">60 FPS</span>
+          </div>
+
+          <div class="topbar-right">
+            <!-- Pausar / Continuar -->
+            <button type="button" class="btn-tool btn-highlight" id="btnPause" title="Pausar / Retomar" aria-label="Pausar jogo">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+              </svg>
+            </button>
+
+            <!-- Reiniciar -->
+            <button type="button" class="btn-tool" id="btnReset" title="Reiniciar partida" aria-label="Reiniciar jogo">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+                <path d="M3 3v5h5"></path>
+              </svg>
+            </button>
+
+            <!-- Áudio: Mute e Volume -->
+            <button type="button" class="btn-tool" id="btnMute" title="Silenciar / Ativar som" aria-label="Controle de áudio">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+              </svg>
+            </button>
+
+            <!-- Popover deslizante de volume -->
+            <div class="volume-popover-container">
+              <button type="button" class="btn-tool" id="btnVolume" title="Ajustar Volume" aria-label="Ajustar volume de áudio">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 20v-6M6 20V10M18 20V4"></path>
+                </svg>
+              </button>
+              <div class="volume-popover" id="volumePopover">
+                <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">Volume Geral</span>
+                <input type="range" class="volume-slider" id="volumeSlider" min="0" max="1" step="0.05" value="1" />
+              </div>
+            </div>
+
+            <!-- Gerenciamento de Saves (.sav) -->
+            <button type="button" class="btn-tool" id="btnSaveMenu" title="Gerenciar Jogo Salvo (.sav)" aria-label="Gerenciamento de saves">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                <polyline points="7 3 7 8 15 8"></polyline>
+              </svg>
+            </button>
+
+            <!-- Screenshot -->
+            <button type="button" class="btn-tool" id="btnScreenshot" title="Capturar Tela" aria-label="Capturar imagem da tela">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                <circle cx="12" cy="13" r="4"></circle>
+              </svg>
+            </button>
+
+            <!-- Tela Cheia -->
+            <button type="button" class="btn-tool" id="btnFullscreen" title="Tela cheia" aria-label="Alternar tela cheia">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+              </svg>
+            </button>
+
+            <!-- Configurações -->
+            <button type="button" class="btn-tool" id="btnSettings" title="Configurações" aria-label="Configurações do emulador">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="3"></circle>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+              </svg>
+            </button>
+          </div>
+        </header>
+
+        <!-- Área de visualização do Canvas -->
+        <main class="emulator-viewport">
+          <div class="video-bezel" id="videoContainer">
+            <!-- Canvas nativo 240x160 do Game Boy Advance -->
+            <canvas id="screenCanvas" class="screen-canvas filter-pixelated scale-contain" width="240" height="160"></canvas>
+
+            <!-- Overlay de Carregamento -->
+            <div class="screen-overlay" id="loadingOverlay" style="display: none;">
+              <div class="spinner"></div>
+              <span class="loading-text">Carregando ROM...</span>
+            </div>
+
+            <!-- Overlay de Pausa -->
+            <div class="screen-overlay" id="pauseOverlay" style="display: none;">
+              <div class="pause-title">PAUSADO</div>
+              <button type="button" class="btn-resume" id="btnResumeOverlay">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                <span>Continuar Jogo</span>
+              </button>
+            </div>
+          </div>
+        </main>
+
+        <!-- Controles Virtuais de Toque para Mobile -->
+        <footer class="touch-controls-container" id="touchControlsContainer"></footer>
+      </section>
+
+      <!-- =========================================
+           MODAIS E DIÁLOGOS
+           ========================================= -->
+      <div class="modal-overlay" id="modalOverlay" style="display: none;">
+        <!-- Modal de Configurações -->
+        <div class="modal-card" id="settingsModal" style="display: none;">
+          <div class="modal-header">
+            <h2 class="modal-title">Configurações</h2>
+            <button type="button" class="btn-modal-close" aria-label="Fechar">&times;</button>
+          </div>
+
+          <div class="settings-tabs">
+            <button type="button" class="settings-tab-btn active" data-tab="tabControls">Controles</button>
+            <button type="button" class="settings-tab-btn" data-tab="tabVideo">Vídeo</button>
+            <button type="button" class="settings-tab-btn" data-tab="tabTouch">Toque</button>
+            <button type="button" class="settings-tab-btn" data-tab="tabReset">Geral</button>
+          </div>
+
+          <div class="modal-body">
+            <!-- Aba Controles (Mapeamento de Teclado) -->
+            <div class="settings-tab-pane active" id="tabControls">
+              <div class="setting-desc">
+                Clique sobre qualquer botão abaixo e pressione a tecla desejada no teclado para alterar o atalho:
+              </div>
+              <div class="keymap-list" id="keymapList"></div>
+            </div>
+
+            <!-- Aba Vídeo -->
+            <div class="settings-tab-pane" id="tabVideo">
+              <div class="setting-group">
+                <label class="setting-label" for="settingFilter">Filtro de Imagem</label>
+                <select class="setting-control" id="settingFilter">
+                  <option value="pixelated">Pixel Sharp (Nítido / Pixel Art clássico)</option>
+                  <option value="smooth">Bilinear (Suavizado)</option>
+                  <option value="scanlines">Linhas CRT (Efeito Scanlines retro)</option>
+                </select>
+                <span class="setting-desc">Escolha como os pixels do GBA são redimensionados na tela.</span>
+              </div>
+
+              <div class="setting-group">
+                <label class="setting-label" for="settingDisplayMode">Escala de Vídeo</label>
+                <select class="setting-control" id="settingDisplayMode">
+                  <option value="contain">Ajustar à Tela (Mantendo proporção 3:2)</option>
+                  <option value="1x">Tamanho Original 1x (240x160)</option>
+                  <option value="2x">Escala 2x (480x320)</option>
+                  <option value="3x">Escala 3x (720x480)</option>
+                </select>
+              </div>
+
+              <div class="setting-row-toggle">
+                <div>
+                  <div class="setting-label">Exibir Contador de FPS</div>
+                  <div class="setting-desc">Mostra taxa de quadros por segundo na barra superior</div>
+                </div>
+                <input type="checkbox" id="settingShowFps" />
+              </div>
+            </div>
+
+            <!-- Aba Toque (Celulares e Tablets) -->
+            <div class="settings-tab-pane" id="tabTouch">
+              <div class="setting-group">
+                <label class="setting-label" for="settingTouchMode">Visibilidade dos Controles</label>
+                <select class="setting-control" id="settingTouchMode">
+                  <option value="auto">Automático (apenas em telas sensíveis ao toque)</option>
+                  <option value="always">Sempre Visível</option>
+                  <option value="hidden">Ocultar Sempre</option>
+                </select>
+              </div>
+
+              <div class="setting-group">
+                <label class="setting-label" for="settingTouchScale">Tamanho dos Botões</label>
+                <select class="setting-control" id="settingTouchScale">
+                  <option value="0.8">Pequeno (80%)</option>
+                  <option value="1.0">Padrão (100%)</option>
+                  <option value="1.2">Grande (120%)</option>
+                </select>
+              </div>
+
+              <div class="setting-group">
+                <label class="setting-label" for="settingTouchOpacity">Opacidade dos Controles</label>
+                <input type="range" class="volume-slider" id="settingTouchOpacity" min="0.2" max="1" step="0.05" value="0.75" />
+              </div>
+
+              <div class="setting-row-toggle">
+                <div>
+                  <div class="setting-label">Vibração Háptica</div>
+                  <div class="setting-desc">Vibração discreta ao pressionar os botões de toque</div>
+                </div>
+                <input type="checkbox" id="settingTouchHaptic" checked />
+              </div>
+            </div>
+
+            <!-- Aba Geral e Redefinir -->
+            <div class="settings-tab-pane" id="tabReset">
+              <div class="setting-group">
+                <div class="setting-label">Restauração de Fábrica</div>
+                <div class="setting-desc">Restaura todos os atalhos de teclado, tamanho dos botões de toque e filtros de vídeo aos valores originais.</div>
+                <div style="margin-top: 10px;">
+                  <button type="button" class="btn-secondary" id="btnResetSettings">Restaurar Padrões</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn-primary btn-modal-close">Fechar</button>
+          </div>
+        </div>
+
+        <!-- Modal de Gerenciamento de Saves (.sav) -->
+        <div class="modal-card" id="saveModal" style="display: none;">
+          <div class="modal-header">
+            <h2 class="modal-title">Gerenciar Jogo Salvo (.sav)</h2>
+            <button type="button" class="btn-modal-close" aria-label="Fechar">&times;</button>
+          </div>
+
+          <div class="modal-body">
+            <p id="saveModalStatus" style="font-size: 0.9rem; color: var(--text-secondary);"></p>
+
+            <div class="setting-group" style="padding-top: 8px;">
+              <button type="button" class="btn-primary" id="btnDownloadSave" style="width: 100%; justify-content: center; padding: 12px;">
+                Exportar Arquivo .sav (Download)
+              </button>
+              <span class="setting-desc">Gera um arquivo compatível com outros emuladores (mGBA, VBA) e flashcarts reais.</span>
+            </div>
+
+            <div class="setting-group" style="padding-top: 8px;">
+              <input type="file" id="saveFileInput" accept=".sav" style="display: none;" />
+              <button type="button" class="btn-secondary" id="btnUploadSave" style="width: 100%; justify-content: center; padding: 12px;">
+                Importar Arquivo .sav Externo
+              </button>
+              <span class="setting-desc">Substitui o save atual da sessão pelo arquivo carregado.</span>
+            </div>
+
+            <div class="setting-group" style="padding-top: 12px; border-top: 1px solid var(--border-subtle);">
+              <button type="button" class="btn-danger" id="btnDeleteLocalSave" style="width: 100%; justify-content: center; padding: 10px;">
+                Apagar Save Local do IndexedDB
+              </button>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn-secondary btn-modal-close">Voltar ao Jogo</button>
+          </div>
+        </div>
+
+        <!-- Modal de Confirmação Genérico -->
+        <div class="modal-card" id="confirmModal" style="display: none; max-width: 420px;">
+          <div class="modal-header">
+            <h2 class="modal-title" id="confirmModalTitle">Confirmação</h2>
+            <button type="button" class="btn-modal-close" aria-label="Fechar">&times;</button>
+          </div>
+          <div class="modal-body">
+            <p id="confirmModalMessage" style="font-size: 0.95rem; color: var(--text-secondary); line-height: 1.5;"></p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn-secondary" id="btnConfirmCancel">Cancelar</button>
+            <button type="button" class="btn-danger" id="btnConfirmAction">Confirmar</button>
+          </div>
+        </div>
+
+        <!-- Modal Sobre / Créditos -->
+        <div class="modal-card" id="aboutModal" style="display: none;">
+          <div class="modal-header">
+            <h2 class="modal-title">Sobre o AdvancePlay</h2>
+            <button type="button" class="btn-modal-close" aria-label="Fechar">&times;</button>
+          </div>
+          <div class="modal-body">
+            <p style="font-size: 0.9rem; color: var(--text-secondary);">
+              <strong>AdvancePlay</strong> é uma plataforma moderna e responsiva de emulação de Game Boy Advance para navegadores, desenvolvida com HTML5, CSS3 e JavaScript puro.
+            </p>
+
+            <div style="background: var(--bg-surface-elevated); padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle); font-size: 0.85rem;">
+              <strong>Créditos do Núcleo de Emulação:</strong><br />
+              O núcleo de emulação é baseado no projeto de código aberto <strong>GBA.js</strong>, criado por <strong>Jeffrey Pfau</strong>.<br />
+              Repositório oficial: <a href="https://github.com/endrift/gbajs" target="_blank" rel="noopener" style="color: var(--accent-color);">github.com/endrift/gbajs</a><br />
+              Licenciado sob a <strong>BSD 2-Clause License</strong>.
+            </div>
+
+            <div style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.4;">
+              Game Boy Advance é uma marca registrada da Nintendo Co., Ltd. Este projeto não possui afiliação, patrocínio ou endosso da Nintendo. Todas as marcas pertencem aos seus respectivos proprietários.
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn-primary btn-modal-close">Fechar</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Toast Flutuante -->
+      <aside class="toast-notification" id="toastNotification">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="16" x2="12" y2="12"></line>
+          <line x1="12" y1="8" x2="12.01" y2="8"></line>
+        </svg>
+        <span id="toastMessage"></span>
+      </aside>
+    </div>
+
+    <!-- Script de Inicialização da Aplicação -->
+    <script type="module" src="/js/app.js"></script>
+  </body>
+</html>

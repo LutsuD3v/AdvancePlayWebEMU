@@ -1,0 +1,8 @@
+{
+  "name": "AdvancePlay GBA Emulator",
+  "description": "Emulador de Game Boy Advance (GBA) de alto desempenho para navegadores, com suporte a ROMs locais, controles de toque, teclado e Gamepad API.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

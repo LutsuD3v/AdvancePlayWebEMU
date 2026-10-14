@@ -1,0 +1,295 @@
+/**
+ * controls.css
+ * Estilização ergonômica dos controles virtuais de toque inspirados no Game Boy Advance.
+ * Utiliza touch-action: none, alta fidelidade tátil, suporte a multi-toque e feedback visual sutil.
+ */
+
+.touch-controls-container {
+  width: 100%;
+  position: relative;
+  z-index: 80;
+  pointer-events: auto;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+  padding-bottom: var(--safe-bottom);
+}
+
+.touch-controls-wrapper {
+  --touch-scale: 1.0;
+  --touch-opacity: 0.75;
+
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 8px 16px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  opacity: var(--touch-opacity);
+  transition: opacity 0.2s ease;
+  transform-origin: bottom center;
+}
+
+/* Linha dos Gatilhos Superiores (L e R) */
+.touch-shoulders-row {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 8px;
+}
+
+.touch-btn-shoulder {
+  width: calc(88px * var(--touch-scale));
+  height: calc(36px * var(--touch-scale));
+  background: linear-gradient(180deg, #242c3d 0%, #161b26 100%);
+  border: 1px solid #334155;
+  border-radius: var(--radius-md) var(--radius-md) var(--radius-sm) var(--radius-sm);
+  color: #cbd5e1;
+  font-weight: 800;
+  font-size: calc(1rem * var(--touch-scale));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+  touch-action: none;
+  transition: all 0.08s ease;
+}
+
+.touch-btn-shoulder.active {
+  background: linear-gradient(180deg, #10b981 0%, #047857 100%);
+  color: #fff;
+  border-color: #34d399;
+  transform: translateY(2px);
+  box-shadow: 0 0 12px var(--accent-glow);
+}
+
+/* Linha Principal de Controles */
+.touch-main-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  width: 100%;
+}
+
+/* =========================================
+   DIRECIONAL DIGITAL (D-PAD)
+   ========================================= */
+
+.touch-dpad-container {
+  width: calc(140px * var(--touch-scale));
+  height: calc(140px * var(--touch-scale));
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: none;
+}
+
+.touch-dpad-cross {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+/* Braços do Direcional */
+.touch-dpad-arm {
+  position: absolute;
+  background: linear-gradient(145deg, #242c3d 0%, #161b26 100%);
+  border: 1px solid #334155;
+  touch-action: none;
+  transition: background 0.08s ease;
+}
+
+.touch-dpad-arm.arm-up {
+  top: 0;
+  left: 33.33%;
+  width: 33.33%;
+  height: 38%;
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+  border-bottom: none;
+}
+
+.touch-dpad-arm.arm-down {
+  bottom: 0;
+  left: 33.33%;
+  width: 33.33%;
+  height: 38%;
+  border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+  border-top: none;
+}
+
+.touch-dpad-arm.arm-left {
+  top: 33.33%;
+  left: 0;
+  width: 38%;
+  height: 33.33%;
+  border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+  border-right: none;
+}
+
+.touch-dpad-arm.arm-right {
+  top: 33.33%;
+  right: 0;
+  width: 38%;
+  height: 33.33%;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  border-left: none;
+}
+
+.touch-dpad-center {
+  position: absolute;
+  top: 33.33%;
+  left: 33.33%;
+  width: 33.34%;
+  height: 33.34%;
+  background: #1e2533;
+}
+
+/* Indicadores de seta no direcional */
+.arm-up::after {
+  content: "▲";
+  position: absolute;
+  top: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 11px;
+  color: #64748b;
+}
+
+.arm-down::after {
+  content: "▼";
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 11px;
+  color: #64748b;
+}
+
+.arm-left::after {
+  content: "◀";
+  position: absolute;
+  left: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 11px;
+  color: #64748b;
+}
+
+.arm-right::after {
+  content: "▶";
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 11px;
+  color: #64748b;
+}
+
+/* Estado pressionado de cada direção */
+.touch-dpad-arm.active {
+  background: linear-gradient(145deg, #10b981 0%, #047857 100%) !important;
+  border-color: #34d399 !important;
+  box-shadow: 0 0 10px var(--accent-glow);
+}
+
+.touch-dpad-arm.active::after {
+  color: #fff;
+}
+
+/* =========================================
+   BOTÕES CENTRAIS (SELECT / START)
+   ========================================= */
+
+.touch-system-group {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.touch-btn-pill {
+  width: calc(56px * var(--touch-scale));
+  height: calc(22px * var(--touch-scale));
+  background: #1e2533;
+  border: 1px solid #334155;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: rotate(-25deg);
+  cursor: pointer;
+  touch-action: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.pill-label {
+  font-size: calc(0.65rem * var(--touch-scale));
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: #94a3b8;
+}
+
+.touch-btn-pill.active {
+  background: var(--accent-color);
+  border-color: #34d399;
+  transform: rotate(-25deg) scale(0.96);
+}
+
+.touch-btn-pill.active .pill-label {
+  color: #052e16;
+}
+
+/* =========================================
+   BOTÕES DE AÇÃO (B e A)
+   ========================================= */
+
+.touch-action-group {
+  position: relative;
+  width: calc(140px * var(--touch-scale));
+  height: calc(130px * var(--touch-scale));
+}
+
+.touch-btn-round {
+  position: absolute;
+  width: calc(58px * var(--touch-scale));
+  height: calc(58px * var(--touch-scale));
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(1.3rem * var(--touch-scale));
+  font-weight: 800;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  touch-action: none;
+  transition: transform 0.06s ease, background 0.06s ease;
+}
+
+/* Botão B (posicionado mais abaixo e à esquerda) */
+.btn-b {
+  bottom: 0;
+  left: 0;
+  background: linear-gradient(145deg, #1e2533 0%, #111827 100%);
+  border: 2px solid #3b4559;
+  color: #e2e8f0;
+}
+
+/* Botão A (posicionado mais acima e à direita, conforme GBA real) */
+.btn-a {
+  top: 0;
+  right: 0;
+  background: linear-gradient(145deg, #2a3449 0%, #161d2d 100%);
+  border: 2px solid #475569;
+  color: #f8fafc;
+}
+
+.touch-btn-round.active {
+  background: linear-gradient(145deg, #10b981 0%, #047857 100%) !important;
+  color: #fff !important;
+  border-color: #34d399 !important;
+  transform: scale(0.92);
+  box-shadow: 0 0 16px var(--accent-glow) !important;
+}

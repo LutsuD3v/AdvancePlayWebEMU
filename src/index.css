@@ -1,0 +1,48 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --color-surface-base: #0b0d11;
+    --color-surface-panel: #131720;
+    --color-surface-card: #1c212c;
+    --color-surface-hover: #262c3b;
+    --color-accent-primary: #10b981;
+    --color-accent-glow: rgba(16, 185, 129, 0.25);
+  }
+
+  body {
+    background-color: var(--color-surface-base);
+    color: #e2e8f0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+/* Pixel-perfect rendering for retro GBA Canvas */
+.canvas-pixelated {
+  image-rendering: -moz-crisp-edges;
+  image-rendering: -webkit-crisp-edges;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+.canvas-smooth {
+  image-rendering: auto;
+}
+
+/* Touch controls ergonomics */
+.touch-control-area {
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Subtle glow for retro hardware aesthetic */
+.retro-glow {
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.retro-bezel {
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.8), 0 4px 12px rgba(0, 0, 0, 0.5);
+}

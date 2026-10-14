@@ -1,0 +1,317 @@
+/**
+ * emulator.css
+ * Estilos específicos da tela de emulação, área de vídeo do Canvas,
+ * barra de ferramentas in-game, overlays de carregamento e pausa.
+ */
+
+.emulator-screen {
+  width: 100%;
+  height: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  background-color: #06080b;
+  overflow: hidden;
+}
+
+/* Barra de ferramentas superior */
+.emulator-topbar {
+  height: 52px;
+  background: rgba(18, 22, 31, 0.95);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  z-index: 100;
+  flex-shrink: 0;
+}
+
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.game-title-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.game-title-display {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 240px;
+}
+
+.game-code-badge {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 2px 6px;
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  color: var(--accent-color);
+  flex-shrink: 0;
+}
+
+.topbar-center {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.gamepad-status-badge {
+  display: none;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.75rem;
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.1);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  padding: 3px 8px;
+  border-radius: var(--radius-full);
+}
+
+.fps-counter {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-tool {
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  position: relative;
+}
+
+.btn-tool:hover {
+  background: var(--bg-surface-elevated);
+  color: var(--text-primary);
+  border-color: var(--border-subtle);
+}
+
+.btn-tool.btn-highlight {
+  color: var(--accent-color);
+}
+
+.btn-tool.btn-highlight:hover {
+  background: rgba(16, 185, 129, 0.12);
+  border-color: var(--accent-color);
+}
+
+/* Popover de Volume */
+.volume-popover-container {
+  position: relative;
+}
+
+.volume-popover {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 8px;
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  display: none;
+  z-index: 200;
+  width: 140px;
+}
+
+.volume-popover.open {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.volume-slider {
+  width: 100%;
+  accent-color: var(--accent-color);
+  cursor: pointer;
+}
+
+/* =========================================
+   ÁREA DE VÍDEO DO JOGO
+   ========================================= */
+
+.emulator-viewport {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  padding: 8px;
+  min-height: 0;
+}
+
+.video-bezel {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #020305;
+  border-radius: var(--radius-md);
+  border: 2px solid #1a202c;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.7);
+  max-width: 100%;
+  max-height: 100%;
+  overflow: hidden;
+}
+
+/* Canvas nativo GBA 240x160 com aspect-ratio 3:2 */
+.screen-canvas {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+  aspect-ratio: 3 / 2;
+  object-fit: contain;
+  background: #000;
+}
+
+/* Filtros de renderização de imagem */
+.filter-pixelated {
+  image-rendering: -moz-crisp-edges;
+  image-rendering: -webkit-crisp-edges;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+.filter-smooth {
+  image-rendering: auto;
+}
+
+/* Efeito Scanlines CRT retrô */
+.video-bezel.has-scanlines::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    rgba(18, 16, 16, 0) 50%, 
+    rgba(0, 0, 0, 0.35) 50%
+  ), linear-gradient(
+    90deg,
+    rgba(255, 0, 0, 0.03),
+    rgba(0, 255, 0, 0.01),
+    rgba(0, 0, 255, 0.03)
+  );
+  background-size: 100% 3px, 3px 100%;
+  z-index: 10;
+}
+
+/* Escalas fixas quando configuradas */
+.scale-1x {
+  width: 240px !important;
+  height: 160px !important;
+}
+
+.scale-2x {
+  width: 480px !important;
+  height: 320px !important;
+}
+
+.scale-3x {
+  width: 720px !important;
+  height: 480px !important;
+}
+
+.scale-contain {
+  width: 100%;
+  height: 100%;
+}
+
+/* =========================================
+   OVERLAYS (LOADING / PAUSE)
+   ========================================= */
+
+.screen-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(6px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  z-index: 50;
+}
+
+.spinner {
+  width: 44px;
+  height: 44px;
+  border: 4px solid var(--border-subtle);
+  border-top-color: var(--accent-color);
+  border-radius: var(--radius-full);
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading-text {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.pause-title {
+  font-size: 1.8rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  color: var(--text-primary);
+  text-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
+}
+
+.btn-resume {
+  background: var(--accent-color);
+  color: #052e16;
+  font-weight: 700;
+  font-size: 0.95rem;
+  padding: 10px 24px;
+  border-radius: var(--radius-md);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 14px var(--accent-glow);
+  transition: all 0.15s ease;
+}
+
+.btn-resume:hover {
+  background: #34d399;
+  transform: scale(1.04);
+}
